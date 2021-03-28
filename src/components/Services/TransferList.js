@@ -9,16 +9,16 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import {useDispatch, useSelector} from "react-redux";
+
+import Divider from "@material-ui/core/Divider";
+import CardHeader from "@material-ui/core/CardHeader";
 import {
   addQualification,
   deleteQualifications,
-  getCoaches,
   getQualifications,
-  resetCoach,
   resetQualifications
-} from "../../redux/actions";
-import Divider from "@material-ui/core/Divider";
-import CardHeader from "@material-ui/core/CardHeader";
+} from "../../redux/Ducks/Qualifications.duck";
+import {getCoaches, resetCoach} from "../../redux/Ducks/Coaches.duck";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -71,15 +71,18 @@ export default function TransferList({searchId}) {
   const [right, setRight] = useState( []);
 
   const update = (list) => {
-    const selectedId = qualifications.map(q => q.CoachId)
-
-    const left = list.filter((l) => selectedId.indexOf(l.id) === -1)
-    const right = list.filter((l) => selectedId.indexOf(l.id) !== -1)
-
-    setLeft([...left])
-    setRight([...right])
+    try {
+      const selectedId = qualifications.map(q => q.coachId)
+      const left = list.filter((l) => selectedId.indexOf(l.id) === -1)
+      const right = list.filter((l) => selectedId.indexOf(l.id) !== -1)
+      setLeft([...left])
+      setRight([...right])
+    }
+    catch (e){
+      const left = [...coaches]
+      setLeft([...left])
+    }
   }
-  console.log(qualifications)
   useEffect(  () => {
     dispatch(getQualifications('service', searchId));
     dispatch(getCoaches())
@@ -88,18 +91,18 @@ export default function TransferList({searchId}) {
       dispatch(resetQualifications())
       dispatch(resetCoach())
     }
-  },[dispatch]);
+  },[dispatch, searchId]);
 
-  useEffect(()=>{
+  useEffect(() => {
     update(coaches)
-  }, [dispatch, coaches])
+  }, [coaches, qualifications])
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
 
   const createQualification = (coachID) => {
     return {
-      id: (coachID * searchId)*100+11,
+      id: (coachID * searchId)*100,
       ServiceId: searchId,
       CoachId: coachID
     }

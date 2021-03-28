@@ -184,12 +184,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* CLIENT SECTION */
 
-.clientContainer {
+.clientContainer > .resultList {
   width: 50vw;
+  height: 70vh;
   margin: 7vh auto;
 }
 
-.clientlogin {
+.clientLogin {
   color: #fff;
   font-size: 1rem;
   font-weight: 300;
@@ -210,14 +211,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   justify-content: space-around;
 }
 
-.bookingContaier {
-  width: 80vw;
-  height: 70vh;
+.bookingContainer {
+  width: fit-content;
+  height: fit-content;
   margin: auto;
+  padding: 20px;
 
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 20px;
 }
 
@@ -253,6 +256,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     gap: 5px;
   }
 }
+
 @media screen and (max-width: 620px) {
   .container {
     flex-direction: column;
@@ -274,10 +278,23 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     width: 90%;
   }
 
+  .clientContainer > .resultList {
+    width: 90vw;
+    max-height: fit-content;
+  }
+
   .bookingSelects {
     flex-direction: column;
     width: 70vw;
     margin: 0 auto;
+    gap: 5px;
   }
 
+  .bookingContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 20px;
+  }
 }

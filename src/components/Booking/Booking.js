@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getSlots,
-  resetSlots,
-  getCoaches,
-  resetCoach,
-  getClients,
-  resetClient,
-  getBookings,
-  resetBookings,
-  deleteBooking,
-  updateBooking,
-  getServices,
-  resetService,
-} from "../../redux/actions";
+
 import { clientsSelector } from "../Clients/Clients.selector";
-import { formattedDuration } from "../formattedDate/formattedDate";
+import {
+  formattedTime,
+  formattedDuration,
+} from "../formattedDate/formattedDate";
 import "../Slots/slots.css";
 import styles from "../MainStyles/mainStyles.module.css";
+import { getClients, resetClient } from "../../redux/Ducks/Clients.duck";
+import { getCoaches, resetCoach } from "../../redux/Ducks/Coaches.duck";
+import { getServices, resetService } from "../../redux/Ducks/Services.duck";
+import { getSlots, resetSlots } from "../../redux/Ducks/Slots.duck";
+import {
+  deleteBooking,
+  getBookings,
+  resetBookings,
+} from "../../redux/Ducks/Bookings.duck";
 
 const Booking = () => {
   const dispatch = useDispatch();
@@ -25,7 +24,7 @@ const Booking = () => {
   // CLIENTS
 
   const clients = useSelector(clientsSelector);
-  const [clientId, setClientId] = useState(0);
+  const [clientId, setClientId] = useState(1);
 
   useEffect(() => {
     dispatch(getClients());
@@ -46,7 +45,7 @@ const Booking = () => {
   useEffect(() => {
     dispatch(getCoaches());
     return () => dispatch(resetCoach());
-  }, []);
+  }, [dispatch]);
 
   const getCoachName = (id) =>
     coaches
@@ -60,12 +59,12 @@ const Booking = () => {
   // SERVICES
 
   const services = useSelector((state) => state.service.data);
-  const [serviceId, setServiceId] = useState(0);
+  const [serviceId, setServiceId] = useState(1);
 
   useEffect(() => {
     dispatch(getServices());
     return () => dispatch(resetService());
-  }, []);
+  }, [dispatch]);
 
   const formatServices = () =>
     services?.map((service) => (
@@ -111,10 +110,12 @@ const Booking = () => {
       .map((booking) => {
         return (
           <div key={booking.id} className={styles.bookingBox}>
-            <h3>{booking.slot.dateStart}</h3>
+            <h3>
+              {booking.slot.dateStart} - {booking.resultPrice}UAH
+            </h3>
             <p>
               {booking.slot.timeStart}-
-              {formattedDuration(booking.slot.timeStart)}
+              {formattedTime(formattedDuration(booking.slot.timeStart))}
             </p>
             {getCoachFromSlot(booking.slot.id)}
 
@@ -138,7 +139,7 @@ const Booking = () => {
           {formatClients()}
         </select>
       </div>
-      <div className={styles.bookingContaier}>{findBooking()}</div>
+      <div className={styles.bookingContainer}>{findBooking()}</div>
     </div>
   );
 };
